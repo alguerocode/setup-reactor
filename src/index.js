@@ -1,8 +1,7 @@
-// require('file-loader')
-// import React from 'react';
+import React from 'react';
 import "./index.css";
-// import App from './App';
-// import ReactDOM from 'react-dom';
+import App from './App';
+import ReactDOM from 'react-dom';
 
-console.log('welcome')
-// ReactDOM.render(<App />, document.getElementById('root'));
+console.log('welcome');
+ReactDOM.render(<App />, document.getElementById('root'));
