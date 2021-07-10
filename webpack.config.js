@@ -52,10 +52,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
       minimizer: [                  // Allows you to override the default minimizer by providing a different one or more customized
         new TerserWebpackPlugin({   // tarser => use for minimize and optimize js files 
           parallel:true,            // Use multi-process parallel running to improve the build speed
-          terserOptions: {          // Terser minify options
-            format: {               
-              comments: false,      // avoid build with comments 
-            },                      
+          terserOptions: {          // Terser minify options                     
             compress: {             // ***  minify option *** 
               comparisons:false,    
             },                      // ****************************************************************************************/
@@ -111,7 +108,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
       new HtmlWebpackPlugin({   //  simplifies creation of HTML files to serve your webpack bundles                              
         template: path.resolve(__dirname, 'public', 'index.html'), // webpack relative or absolute path to the template. 
         title: "React | Basic Setup",                              // title of the page
-        inject: true,                                              // inject the script in html and use defer type approach 
+        inject: true,                                              // inject the script in html and use defer type approach                                // List all entries which should not be injected
       }),                                                          // ********************************************************
       new MiniCssExtractPlugin({  // extract css and put them in sperate files
         filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",              // file name approach
