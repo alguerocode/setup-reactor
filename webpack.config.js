@@ -5,11 +5,34 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 
-
+{/*
+  webpack configuration structure:
+  mode, 
+  entry,
+  output,
+  devtool,
+  optimization:{
+    tarserPlugin,
+    cssMinimizePlugin,
+    splitChunks
+  }
+  devServer
+  plugins:{
+    htmlWebpackPlugin,
+    cssExtractPlugin,
+    webpack.DefinePlugin
+  }
+  loaders:{
+    babel-loader,
+    css and extractCss loader,
+    url-loader,
+    file-loader
+  }
+*/}
 module.exports = (env) => { // webpack function with env pramater and return webpack config ;
-                            //
+                            // ****************************************************************************************/
   console.log(env)          // console the webpack env object {} ;
-
+                            // ****************************************************************************************/
   return {
     mode: env.production ? 'production' : 'development',//Providing the mode configuration option tells webpack
                                                         //to use its built-in optimizations accordingly. (production | development);
@@ -29,23 +52,26 @@ module.exports = (env) => { // webpack function with env pramater and return web
       minimizer: [                  // Allows you to override the default minimizer by providing a different one or more customized
         new TerserWebpackPlugin({   // tarser => use for minimize and optimize js files 
           parallel:true,            // Use multi-process parallel running to improve the build speed
-          terserOptions: {          // Terser minify options 
-            compress: {              
+          terserOptions: {          // Terser minify options
+            format: {               
+              comments: false,      // avoid build with comments 
+            },                      
+            compress: {             // ***  minify option *** 
               comparisons:false,    
+            },                      // ****************************************************************************************/
+            mangle: {               // allows you to control whether or not to mangle class name, function name, property name,
+              safari10: true        // ****************************************************************************************/
+            },                      // ****************************************************************************************/
+            output: {               // build outpu option 
+              comments: false,      // avoid build with comments
+              ascii_only: true,     //escape Unicode characters in strings and regexps
             },
-            mangle: {
-              safari10: true
-            },
-            output: {
-              comments: false,
-              ascii_only: true
-            },
-            warnings: false       // allow show warning 
+            warnings: false         // allow show warning 
           },
         }),
-        new CssMinimizerPlugin()
+        new CssMinimizerPlugin()   // css minimizer plugin 
       ],
-      splitChunks: {
+      splitChunks: {               // split chunk configuration 
         chunks: "all",
         minSize: 0,
         maxInitialRequests: 20,
@@ -66,71 +92,78 @@ module.exports = (env) => { // webpack function with env pramater and return web
           }
         }
       },
-      runtimeChunk: "single"
-    },
-    devServer: {
-      port: 5000,
-      contentBase:'./public',
-      watchContentBase: true,
-      filename: '[name].bundle.js',
-      hot: true,
-      compress: true,
-      historyApiFallback: true,
-      open: true,
-      overlay: true,
-      publicPath:'/'
+      runtimeChunk: "single"       // adds an additional chunk containing only the runtime to each entrypoint
+    },                             //************************************************************************/
+    devServer: {                   //describes the options that affect the behavior of webpack-dev-server  
+      port: 5000,                  //the port of the server to run into                                    
+      contentBase:'./public',      //the content base of files live                                        
+      watchContentBase: true,      //reload when something changed                                         
+      filename: '[name].bundle.js',//name of file output                                                   
+      hot: true,                   //auto realod the files on the server                                   
+      compress: true,              //Enable gzip compression for everything served                         
+      historyApiFallback: true,    // the index.html page will likely have to be served in place of any 404 responses
+      open: true,                  // open new window in browser when server are runing
+      overlay: true,               //Shows a full-screen overlay in the browser when there are compiler errors or warnings.
+      publicPath:'/',              //The bundled files will be available in the browser under this path
+      liveReload:true              //the dev-server will reload/refresh the page when file changes are detected.
     },
     plugins: [
-      new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, 'public', 'index.html'),
-        title: "React | Basic Setup",
-        inject: true,
+      new HtmlWebpackPlugin({   //  simplifies creation of HTML files to serve your webpack bundles                              
+        template: path.resolve(__dirname, 'public', 'index.html'), // webpack relative or absolute path to the template. 
+        title: "React | Basic Setup",                              // title of the page
+        inject: true,                                              // inject the script in html and use defer type approach 
+      }),                                                          // ********************************************************
+      new MiniCssExtractPlugin({  // extract css and put them in sperate files
+        filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",              // file name approach
+        chunkFilename: env.production ? "assets/css/[name].[contenthash:8].chunk.css" : "assets/css/[name].chunk.css"// chunk name of files
       }),
-      new MiniCssExtractPlugin({
-        filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",
-        chunkFilename: env.production ? "assets/css/[name].[contenthash:8].chunk.css" : "assets/css/[name].chunk.css"
-      }),
+      new webpack.DefinePlugin({   // set the NODE_ENV property 
+        "process.env.NODE_ENV": JSON.stringify(
+          env.production ? "production" : "development" 
+        )
+      })
     ],
-    module: {
+    module: { // loaders section in module.rules
       rules: [
         {
-          test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader']
+          test: /\.css$/,                                  //test the file with extention ending by .css
+          use: [MiniCssExtractPlugin.loader, 'css-loader'] // css-loader and minimize the css
         },
         {
-          test: /\.(js|jsx)?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
-              cacheCompression: false,
-              envName: env.production ? 'production' : 'development'
+          test: /\.(js|jsx)?$/,                            // test the file with extention ending by .js or .jsx
+          exclude: /node_modules/,                         // exclude node_modules folder to served in babel-loader
+          use: {                                           // conifguatin the usage of babel-loader
+            loader: 'babel-loader',                        // loader => babel loader
+            options: {                                     // options of loader
+              cacheDirectory: true,                        // the given directory will be used to cache the results of the loader
+              cacheCompression: false,                     // each Babel transform output will be compressed with Gzip.
+              envName: env.production ? 'production' : 'development' // set the babel loader envirounment
             }
           }
         },
         {
-          test: /\.(png|jpg|gif)$/,
-          use: {
-            loader: "url-loader",
-            options: {
-              limit: false,
-              encoding: true,
-              name: "images/[name].[fullhash].[ext]",
+          test: /\.(png|jpg|gif)$/,                      // test the file with extention ending by .jpg,.png,gif
+          use: {                                         // image loader
+            loader: "url-loader",                        // use loader => url-loader
+            options: {                                   // optinos of loader
+              limit: false,                              //The limit can be specified via loader options and defaults to no limit.
+              encoding: true,                            //Specify the encoding which the file will be inlined with. If unspecified the encoding will be base64
+              name: "images/[name].[fullhash].[ext]",    // name of files 
             }
           }
         },
         {
-          test: /\.(eot|otf|ttf|woff|woff2)$/,
-          loader: require.resolve("file-loader"),
-          options: {
-            name: "static/images/[name].[fullhash].[ext]"
+          test: /\.(eot|otf|ttf|woff|woff2)$/,            // files loader
+          loader: require.resolve("file-loader"),         // node resolve the file and require it 
+          options: {                                      // loader options
+            name: "static/images/[name].[fullhash].[ext]" // name of files
           }
         }
       ],
     },
-    resolve: {
-      extensions: [".js", ".jsx"]
+    resolve: {                    //Configure how modules are resolved.              
+      extensions: [".js", ".jsx"] //Attempt to resolve these extensions in order
     }
   };
 };
+/************************************************************************************************** end  */
