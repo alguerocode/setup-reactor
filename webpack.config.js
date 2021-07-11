@@ -38,29 +38,30 @@ module.exports = (env) => { // webpack function with env pramater and return web
   // ****************************************************************************************/
   return {
     mode: env.production ? 'production' : 'development',//Providing the mode configuration option tells webpack
-    //to use its built-in optimizations accordingly. (production | development);
-    entry: './src/index.jsx',                            //The entry object is where webpack looks to start building the bundle;
+                                                        //to use its built-in optimizations accordingly. (production | development);
+    entry: './src/index.jsx',                           //The entry object is where webpack looks to start building the bundle;
     output: {
-      clean: true, // Clean the output directory before emit.
+      clean: true,                                                  // Clean the output directory before emit.
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
-        "assets/js/[name].bundle.js",      // it determines depend on webpack env property;
+        "assets/js/[name].bundle.js",                               // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
-      publicPath: './'  // This option specifies the public URL of the output directory when referenced in a browser;
+      publicPath: './'                                              // This option specifies the public URL of the output directory when referenced in a browser;
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
-    // webpack env.production = true is set to false for optimization and minifying the files
-    optimization: {                  // optimization section 
+                                                           // webpack env.production = true is set to false for optimization and minifying the files
+    optimization: {                 // optimization section 
       minimize: env.production,     // Tell webpack to minimize the bundle using the TerserPlugin or the plugin(s) specified in minimizer
-      // if webpack env.production = false don't use it and use default webpack optimization 
+                                    // if webpack env.production = false don't use it and use default webpack optimization 
       minimizer: [                  // Allows you to override the default minimizer by providing a different one or more customized
+
         new TerserWebpackPlugin({   // tarser => use for minimize and optimize js files 
-          parallel: true,            // Use multi-process parallel running to improve the build speed
+          parallel: true,           // Use multi-process parallel running to improve the build speed
           terserOptions: {          // Terser minify options                     
-            compress: {             // ***  minify option *** 
+            compress: {             // {***  minify option **}
               comparisons: false,
             },                      // ****************************************************************************************/
             mangle: {               // allows you to control whether or not to mangle class name, function name, property name,
-              safari10: true        // ****************************************************************************************/
+              safari10: true        //
             },                      // ****************************************************************************************/
             output: {               // build outpu option 
               comments: false,      // avoid build with comments
@@ -108,14 +109,14 @@ module.exports = (env) => { // webpack function with env pramater and return web
       liveReload: true              //the dev-server will reload/refresh the page when file changes are detected.
     },
     plugins: [
-      new HtmlWebpackPlugin({   //  simplifies creation of HTML files to serve your webpack bundles                              
+      new HtmlWebpackPlugin({                                      //  simplifies creation of HTML files to serve your webpack bundles                              
         template: path.resolve(__dirname, 'public', 'index.html'), // webpack relative or absolute path to the template. 
         title: "React | Basic Setup",                              // title of the page
         inject: true,                                              // inject the script in html and use defer type approach                                // List all entries which should not be injected
       }),                                                          // ********************************************************
-      new MiniCssExtractPlugin({  // extract css and put them in sperate files
-        filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",              // file name approach
-        chunkFilename: env.production ? "assets/css/[name].[contenthash:8].chunk.css" : "assets/css/[name].chunk.css"// chunk name of files
+      new MiniCssExtractPlugin({                                                                                      // extract css and put them in sperate files
+        filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",               // file name approach
+        chunkFilename: env.production ? "assets/css/[name].[contenthash:8].chunk.css" : "assets/css/[name].chunk.css" // chunk name of files
       }),
       new webpack.DefinePlugin({   // set the NODE_ENV property 
         "process.env.NODE_ENV": JSON.stringify(
@@ -131,7 +132,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
 
       })
     ],
-    module: { // loaders section in module.rules
+    module: {                     // loaders section in module.rules
       rules: [
         {
           test: /\.worker\.js$/,  // test for worker javascript files
@@ -148,7 +149,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           }, "postcss-loader"]                             //for optimization and performancd loader;
         },
         {
-          test: /\.s[ac]ss$/,                                //Sass is another popular CSS processing framework
+          test: /\.s[ac]ss$/,                              //Sass is another popular CSS processing framework
           use: [
             MiniCssExtractPlugin.loader,
             {
