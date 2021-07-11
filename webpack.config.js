@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-
+const WorkBoxPlugin = require('workbox-webpack-plugin');
 {/*
   webpack configuration structure:
   mode, 
@@ -23,8 +23,11 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
     webpack.DefinePlugin
   }
   loaders:{
+    web-worker,
     babel-loader,
     css and extractCss loader,
+    postcss-loader,
+    sass-loader,
     url-loader,
     file-loader
   }
@@ -118,10 +121,19 @@ module.exports = (env) => { // webpack function with env pramater and return web
         "process.env.NODE_ENV": JSON.stringify(
           env.production ? "production" : "development"
         )
+      }),
+      new WorkBoxPlugin.GenerateSW({  // Service workers enable advanced optimization techniques and improvements to user experience
+        swDest:"service-worker.js",   // specifies the output filename for the generated worker file.
+        clientsClaim:true,            // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting:true              // makes updates to the service worker take effect immediately 
       })
     ],
     module: { // loaders section in module.rules
       rules: [
+        {
+          test: /\.worker\.js$/,  // test for worker javascript files
+          loader: "worker-loader" // use web worker loader in webpack to create new threades 
+        },                        //to apply multi threads operation in javascript.
         {
           test: /\.css$/,                                  //test the file with extention ending by .css
           use: [MiniCssExtractPlugin.loader, {             // css extract loader;
@@ -137,7 +149,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           use: [
             MiniCssExtractPlugin.loader,
             {
-              loader: "css-loader",
+              loader: "css-loader", 
               options: {
                 importLoaders: 2
               }
