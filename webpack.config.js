@@ -39,7 +39,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
   return {
     mode: env.production ? 'production' : 'development',//Providing the mode configuration option tells webpack
     //to use its built-in optimizations accordingly. (production | development);
-    entry: './src/index.js',                            //The entry object is where webpack looks to start building the bundle;
+    entry: './src/index.jsx',                            //The entry object is where webpack looks to start building the bundle;
     output: {
       clean: true, // Clean the output directory before emit.
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
@@ -122,11 +122,13 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      new WorkBoxPlugin.InjectManifest({  // Service workers enable advanced optimization techniques and improvements to user experience
-        swSrc: "src/service-worker.js",   //The path to the source service worker file that can contain your own customized code
-        swDest:"service-worker.js",       // specifies the output filename for the generated worker file.
-        clientsClaim:true,                // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-        skipWaiting:true                  // makes updates to the service worker take effect immediately 
+      new WorkBoxPlugin.GenerateSW({       // Service workers enable advanced optimization techniques and improvements to user experience
+        swDest:"service-worker.js",        // specifies the output filename for the generated worker file.
+        mode:env.production ? "production" : "development",// => mode env for WorkboxPlugin
+        clientsClaim:true,                 // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting:true,                  // makes updates to the service worker take effect immediately
+      
+
       })
     ],
     module: { // loaders section in module.rules
