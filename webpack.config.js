@@ -30,31 +30,31 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
   }
 */}
 module.exports = (env) => { // webpack function with env pramater and return webpack config ;
-                            // ****************************************************************************************/
+  // ****************************************************************************************/
   console.log(env)          // console the webpack env object {} ;
-                            // ****************************************************************************************/
+  // ****************************************************************************************/
   return {
     mode: env.production ? 'production' : 'development',//Providing the mode configuration option tells webpack
-                                                        //to use its built-in optimizations accordingly. (production | development);
+    //to use its built-in optimizations accordingly. (production | development);
     entry: './src/index.js',                            //The entry object is where webpack looks to start building the bundle;
     output: {
       clean: true, // Clean the output directory before emit.
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
-                                 "assets/js/[name].bundle.js",      // it determines depend on webpack env property;
+        "assets/js/[name].bundle.js",      // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
       publicPath: './'  // This option specifies the public URL of the output directory when referenced in a browser;
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
-                                                           // webpack env.production = true is set to false for optimization and minifying the files
-    optimization:{                  // optimization section 
+    // webpack env.production = true is set to false for optimization and minifying the files
+    optimization: {                  // optimization section 
       minimize: env.production,     // Tell webpack to minimize the bundle using the TerserPlugin or the plugin(s) specified in minimizer
-                                    // if webpack env.production = false don't use it and use default webpack optimization 
+      // if webpack env.production = false don't use it and use default webpack optimization 
       minimizer: [                  // Allows you to override the default minimizer by providing a different one or more customized
         new TerserWebpackPlugin({   // tarser => use for minimize and optimize js files 
-          parallel:true,            // Use multi-process parallel running to improve the build speed
+          parallel: true,            // Use multi-process parallel running to improve the build speed
           terserOptions: {          // Terser minify options                     
             compress: {             // ***  minify option *** 
-              comparisons:false,    
+              comparisons: false,
             },                      // ****************************************************************************************/
             mangle: {               // allows you to control whether or not to mangle class name, function name, property name,
               safari10: true        // ****************************************************************************************/
@@ -93,7 +93,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
     },                             //************************************************************************/
     devServer: {                   //describes the options that affect the behavior of webpack-dev-server  
       port: 5000,                  //the port of the server to run into                                    
-      contentBase:'./public',      //the content base of files live                                        
+      contentBase: './public',      //the content base of files live                                        
       watchContentBase: true,      //reload when something changed                                         
       filename: '[name].bundle.js',//name of file output                                                   
       hot: true,                   //auto realod the files on the server                                   
@@ -101,8 +101,8 @@ module.exports = (env) => { // webpack function with env pramater and return web
       historyApiFallback: true,    // the index.html page will likely have to be served in place of any 404 responses
       open: true,                  // open new window in browser when server are runing
       overlay: true,               //Shows a full-screen overlay in the browser when there are compiler errors or warnings.
-      publicPath:'/',              //The bundled files will be available in the browser under this path
-      liveReload:true              //the dev-server will reload/refresh the page when file changes are detected.
+      publicPath: '/',              //The bundled files will be available in the browser under this path
+      liveReload: true              //the dev-server will reload/refresh the page when file changes are detected.
     },
     plugins: [
       new HtmlWebpackPlugin({   //  simplifies creation of HTML files to serve your webpack bundles                              
@@ -116,7 +116,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
       }),
       new webpack.DefinePlugin({   // set the NODE_ENV property 
         "process.env.NODE_ENV": JSON.stringify(
-          env.production ? "production" : "development" 
+          env.production ? "production" : "development"
         )
       })
     ],
@@ -124,7 +124,44 @@ module.exports = (env) => { // webpack function with env pramater and return web
       rules: [
         {
           test: /\.css$/,                                  //test the file with extention ending by .css
-          use: [MiniCssExtractPlugin.loader, 'css-loader'] // css-loader and minimize the css
+          use: [MiniCssExtractPlugin.loader, {             // css extract loader;
+            loader: 'css-loader',                          // css-loader and minimize the css
+            options: {                                     // options
+              modules: true,                               // enable css modules
+              importLoaders: 1                             // imoprt loader before css-loader
+            }                                              //****************************************** */
+          }, "postcss-loader"]                             //for optimization and performancd loader;
+        },
+        {
+          test: /\.s[ac]ss$/,                                //Sass is another popular CSS processing framework
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: "css-loader",
+              options: {
+                importLoaders: 2
+              }
+            },
+            "resolve-url-loader",
+            {
+              loader: "sass-loader",
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
+        },
+        {
+          test: /\.module.css$/,                              // test the file with extention ending by .css
+          use: [                                              //                              
+            MiniCssExtractPlugin.loader,                      // extract css loader
+            {                                                 //
+              loader: "css-loader",                           //
+              options: {                                      // loader options
+                modules: true                                 // enable module option to use css module in css loader
+              }
+            }
+          ]
         },
         {
           test: /\.(js|jsx)?$/,                            // test the file with extention ending by .js or .jsx
