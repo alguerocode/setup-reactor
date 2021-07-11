@@ -122,10 +122,11 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      new WorkBoxPlugin.GenerateSW({  // Service workers enable advanced optimization techniques and improvements to user experience
-        swDest:"service-worker.js",   // specifies the output filename for the generated worker file.
-        clientsClaim:true,            // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-        skipWaiting:true              // makes updates to the service worker take effect immediately 
+      new WorkBoxPlugin.InjectManifest({  // Service workers enable advanced optimization techniques and improvements to user experience
+        swSrc: "src/service-worker.js",   //The path to the source service worker file that can contain your own customized code
+        swDest:"service-worker.js",       // specifies the output filename for the generated worker file.
+        clientsClaim:true,                // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting:true                  // makes updates to the service worker take effect immediately 
       })
     ],
     module: { // loaders section in module.rules
