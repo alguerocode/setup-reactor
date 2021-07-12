@@ -3,7 +3,7 @@ module.exports = { // you can learn this in babel documentation
     [
       "@babel/preset-env",
       {
-        modules: false
+        modules: false,
       }
     ],
     "@babel/preset-react"

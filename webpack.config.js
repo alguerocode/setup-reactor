@@ -59,6 +59,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           terserOptions: {          // Terser minify options                     
             compress: {             // {***  minify option **}
               comparisons: false,
+              drop_console:true     // remove console log from files
             },                      // ****************************************************************************************/
             mangle: {               // allows you to control whether or not to mangle class name, function name, property name,
               safari10: true        //
@@ -97,7 +98,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
     },                             //************************************************************************/
     devServer: {                   //describes the options that affect the behavior of webpack-dev-server  
       port: 5000,                  //the port of the server to run into                                    
-      contentBase: './public',      //the content base of files live                                        
+      contentBase: '/',            //the content base of files live                                        
       watchContentBase: true,      //reload when something changed                                         
       filename: '[name].bundle.js',//name of file output                                                   
       hot: true,                   //auto realod the files on the server                                   
@@ -123,13 +124,11 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      new WorkBoxPlugin.GenerateSW({       // Service workers enable advanced optimization techniques and improvements to user experience
-        swDest:"service-worker.js",        // specifies the output filename for the generated worker file.
+      new WorkBoxPlugin.GenerateSW({            // Service workers enable advanced optimization techniques and improvements to user experience
+        swDest:"service-worker.js",             // specifies the output filename for the generated worker file.
         mode:env.production ? "production" : "development",// => mode env for WorkboxPlugin
-        clientsClaim:true,                 // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-        skipWaiting:true,                  // makes updates to the service worker take effect immediately
-      
-
+        clientsClaim:true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting:true                        // makes updates to the service worker take effect immediately
       })
     ],
     module: {                     // loaders section in module.rules
@@ -185,6 +184,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           use: {                                           // conifguatin the usage of babel-loader
             loader: 'babel-loader',                        // loader => babel loader
             options: {                                     // options of loader
+              
               cacheDirectory: true,                        // the given directory will be used to cache the results of the loader
               cacheCompression: false,                     // each Babel transform output will be compressed with Gzip.
               envName: env.production ? 'production' : 'development' // set the babel loader envirounment
