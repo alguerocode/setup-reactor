@@ -8,10 +8,14 @@
 
 > create react basic app for setup development envirounment 
 
-## Install
+## how to setup reactor 
 
 ```sh
-npm install
+git clone https://github.com/alhashmicode/setup-reactor.git
+
+npm install 
+
+npm start 
 ```
 
 ## Usage
