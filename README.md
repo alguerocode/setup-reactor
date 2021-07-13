@@ -20,7 +20,8 @@ git clone https://github.com/alhashmicode/setup-reactor.git
 npm install 
 
 ```
-
+## setup reactor with typescript
+if you want to typescript in you reactor setup project go to typescritp branch [typescript](https://github.com/alhashmicode/setup-reactor/tree/typescript)
 ## Usage
 for run development server 
 ```sh
