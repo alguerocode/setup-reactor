@@ -11,6 +11,7 @@
 
 
 > create react basic app for setup development envirounment 
+> with webpack and babel and postCss to optimizing css and transform it to older code
 
 ## how to setup reactor 
 
