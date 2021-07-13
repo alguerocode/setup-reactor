@@ -30,6 +30,12 @@ for build and optimizing project
 ```sh
 npm run build
 ```
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome.<br />
+Feel free to check [issues page](https://github.com/alhashmicode/reactor-setup/issues) if you want to contribute.<br />
+[Check the contributing guide](./CONTRIBUTING.md).<br />
+
 
 ## Author
 
