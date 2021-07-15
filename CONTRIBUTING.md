@@ -8,11 +8,11 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## Setting Up the project locally
 
-- fist thing to contribute in this repo create fork 
+- first thing to contribute in this repo create fork 
 - git clone the repo `git clone https://github.com/alhashmicode/setup-reactor.git'
 - install all node packages and make you changes `npm install`
 - add your issue or create pull request to see you changes and add it in main branch 
- 
+- create nice readme files 
 ## Submitting a Pull Request
 
 
