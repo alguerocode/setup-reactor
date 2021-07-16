@@ -22,6 +22,11 @@ git clone https://github.com/alhashmicode/setup-reactor.git
 
 npm install 
 ```
+delete the typescript branch from your project 
+
+```sh 
+git brnach -D typescript
+```
 run webpack server 
 ```sh
 npm run start
