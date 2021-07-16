@@ -15,13 +15,18 @@
 > using webpack 5 , babel,postCss 
 
 ## how to setup reactor 
+setup in your computer
 
 ```sh
 git clone https://github.com/alhashmicode/setup-reactor.git
 
 npm install 
-
 ```
+run webpack server 
+```sh
+npm run start
+```
+
 ## setup reactor with typescript
 if you want to typescript in you reactor setup project go to typescritp branch [typescript](https://github.com/alhashmicode/setup-reactor/tree/typescript)
 ## Usage
