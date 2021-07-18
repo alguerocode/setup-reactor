@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const { GenerateSW } = require('workbox-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 {/*
   webpack configuration s tructure:
   mode, 
@@ -45,7 +45,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
         "assets/js/[name].bundle.js",                               // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
-      publicPath: path.resolve(__dirname, "/")                       // This option specifies the public URL of the output directory when referenced in a browser;
+      publicPath:"/"                                                // This option specifies the public URL of the output directory when referenced in a browser;
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
     // webpack env.production = true is set to false for optimization and minifying the files
@@ -111,11 +111,8 @@ module.exports = (env) => { // webpack function with env pramater and return web
     },
     plugins: [
       new HtmlWebpackPlugin({                                      //  simplifies creation of HTML files to serve your webpack bundles                              
-        template: path.resolve(__dirname, 'public', 'index.html'), // webpack relative or absolute path to the template. 
-        title: "React | Basic Setup",                              // title of the page
+        template: path.resolve(__dirname, 'public/index.html'), // webpack relative or absolute path to the template.
         inject: true,                                              // inject the script in html and use defer type approach 
-        scriptLoading: "defer",                                    // add scription loading defenition
-        publicPath: path.resolve(__dirname, "/")                   // add public path 
       }),                                                          // ********************************************************
       new MiniCssExtractPlugin({                                                                                      // extract css and put them in sperate files
         filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",               // file name approach
@@ -126,11 +123,10 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      new GenerateSW({                //The GenerateSW plugin will create a service worker file for you and add it to the webpack asset pipeline.
-        swDest: "service-worker.js",  //The path and filename of the service worker file that will be created by the build process.
-        clientsClaim: true,           //Whether or not the service worker should start controlling any existing clients as soon as it activates.
-        skipWaiting: true,            //Whether or not the service worker should skip over the waiting lifecycle stage. Normally this is used with clientsClaim: true.
-        sourcemap:env.development     // add server worker source map in development envirounment.
+      new WorkboxPlugin.InjectManifest({ // service worker
+        swSrc: path.resolve(__dirname,"src/service-worker.js"),
+        swDest: "service-worker.js",
+        mode:env.production ? "production" : "development"
       })
     ],
     module: {                     // loaders section in module.rules
@@ -188,7 +184,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
             options: {                                     // options of loader
 
               cacheDirectory: true,                        // the given directory will be used to cache the results of the loader
-              cacheCompression: false,                     // each Babel transform output will be compressed with Gzip.
+              cacheCompression: true,                     // each Babel transform output will be compressed with Gzip.
               envName: env.production ? 'production' : 'development' // set the babel loader envirounment
             }
           }
