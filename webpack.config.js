@@ -127,13 +127,14 @@ module.exports = (env) => { // webpack function with env pramater and return web
         )
       }),
       //todo                        
-      new InjectManifest({                       // Service workers enable advanced optimization techniques and improvements to user experience
-        swDest: "service-worker.js",             // specifies the output filename for the generated worker file.
+      new InjectManifest({                               // Service workers enable advanced optimization techniques and improvements to user experience
+        swSrc:path.resolve(__dirname,"src","index.jsx"), //The path to the source service worker file that can contain your own customized code
+        swDest: "service-worker.js",                     // specifies the output filename for the generated worker file.
         mode: env.production ? "production" : "development",// => mode env for WorkboxPlugin
-        clientsClaim: true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-        skipWaiting: true,                       // makes updates to the service worker take effect immediately,
-        sourcemap:env.development,               // create source map for server worker in development mode
-        directoryIndex:"index.html",             // directoryIndex
+        clientsClaim: true,                              // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting: true,                               // makes updates to the service worker take effect immediately,
+        sourcemap:env.development,                       // create source map for server worker in development mode
+        directoryIndex:"index.html",                     // directoryIndex
       })
     ],
     module: {                     // loaders section in module.rules
