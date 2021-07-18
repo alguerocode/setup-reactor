@@ -45,7 +45,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
         "assets/js/[name].bundle.js",                               // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
-      publicPath:"/"                                                // This option specifies the public URL of the output directory when referenced in a browser;
+      publicPath: "/"                                                // This option specifies the public URL of the output directory when referenced in a browser;
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
     // webpack env.production = true is set to false for optimization and minifying the files
@@ -59,7 +59,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           terserOptions: {          // Terser minify options                     
             compress: {             // {***  minify option **}
               comparisons: false,
-              drop_console: true     // remove console log from files
+              drop_console: true    // remove console log from files
             },                      // ****************************************************************************************/
             mangle: {               // allows you to control whether or not to mangle class name, function name, property name,
               safari10: true        //
@@ -101,6 +101,9 @@ module.exports = (env) => { // webpack function with env pramater and return web
       compress: true,              //Enable gzip compression for everything served                         
       historyApiFallback: true,    // the index.html page will likely have to be served in place of any 404 responses
       overlay: true,               //Shows a full-screen overlay in the browser when there are compiler errors or warnings.
+      stats: {
+        cached: false
+      }
     },
     plugins: [
       new HtmlWebpackPlugin({                                      //  simplifies creation of HTML files to serve your webpack bundles                              
@@ -143,7 +146,9 @@ module.exports = (env) => { // webpack function with env pramater and return web
                 importLoaders: 2
               }
             },
-            "resolve-url-loader",
+            {
+              loader: "resolve-url-loader"
+            },
             {
               loader: "sass-loader",
               options: {
@@ -171,36 +176,25 @@ module.exports = (env) => { // webpack function with env pramater and return web
             loader: 'babel-loader',                        // loader => babel loader
             options: {                                     // options of loader
 
-              cacheDirectory: true,                        // the given directory will be used to cache the results of the loader
-              cacheCompression: true,                     // each Babel transform output will be compressed with Gzip.
+              cacheDirectory: true,                                  // the given directory will be used to cache the results of the loader
+              cacheCompression: true,                                // each Babel transform output will be compressed with Gzip.
               envName: env.production ? 'production' : 'development' // set the babel loader envirounment
             }
           }
         },
         {
-          test:  /\.(png|svg|jpg|jpeg|gif)$/,            // test the file with extention ending by .jpg,.png,gif
-          use: {                                         // image loader
-            loader: "url-loader",                        // use loader => url-loader
-            options: {                                   // optinos of loader
-              limit: false,                              //The limit can be specified via loader options and defaults to no limit.
-              encoding: true,                            //Specify the encoding which the file will be inlined with. If unspecified the encoding will be base64
-              name: "images/[name].[fullhash].[ext]",    // name of files 
-            }
+          test: /\.html$/,               // test for html extentions
+          loader: 'html-loader',         // html loader for load files such as  images by html imports
+          options: {                     // html loader options
+            minimize: env.production,    // Tell html-loader to minimize HTML
+            sources: true                // Enables/Disables sources handling
           }
         },
         {
-          test: /\.html$/,              // test for html extentions
-          loader: 'html-loader',        // html loader for load files such as  images by html imports
-          options:{                     // html loader options
-            minimize: env.production,   // Tell html-loader to minimize HTML
-            sources:true                // Enables/Disables sources handling
-          }
-        },
-        {
-          test: /\.(eot|otf|ttf|woff|woff2)$/,            // files loader
-          loader: require.resolve("file-loader"),         // node resolve the file and require it 
-          options: {                                      // loader options
-            name: "static/images/[name].[fullhash].[ext]" // name of files
+          test: /\.(jpe?g|png|gif)$/,        // test for image extentions
+          type: 'asset/resource',            //use assests modules
+          generator: {                       // generator for asset
+            filename: 'img/[hash][ext]'      // filename of images
           }
         }
       ],
