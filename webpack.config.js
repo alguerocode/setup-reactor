@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const {GenerateSW, InjectManifest} = require('workbox-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
 {/*
   webpack configuration structure:
   mode, 
@@ -127,23 +127,14 @@ module.exports = (env) => { // webpack function with env pramater and return web
         )
       }),
       //todo                        
-      // new GenerateSW({                           // Service workers enable advanced optimization techniques and improvements to user experience
-      //   swDest: "service-worker.js",             // specifies the output filename for the generated worker file.
-      //   mode: env.production ? "production" : "development",// => mode env for WorkboxPlugin
-      //   clientsClaim: true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-      //   skipWaiting: true,                       // makes updates to the service worker take effect immediately,
-      //   sourcemap:env.development,               // create source map for server worker in development mode
-      //   directoryIndex:"index.html",             // If a navigation request for a URL ending in / fails to match a precached URL, this value will be appended to the URL and that will be checked for a precache match.
-      //   navigateFallback:'',
-      //   dontCacheBustURLsMatching,
-      //   exclude: [
-      //     // Images don't need to be pre-cached (cache only if in use)
-      //     /\.(png|jpg|jpeg|webm|gif|svg|map)$/,
-      //     // Translations don't need to be pre-cached (cache only if in use)
-      //     /[a-z]{2}(?:-[A-Z]{2})?-[a-z0-9]{20}\.min\.js/
-      // ], 
-      //   runtimeCaching:''
-      // })
+      new InjectManifest({                       // Service workers enable advanced optimization techniques and improvements to user experience
+        swDest: "service-worker.js",             // specifies the output filename for the generated worker file.
+        mode: env.production ? "production" : "development",// => mode env for WorkboxPlugin
+        clientsClaim: true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting: true,                       // makes updates to the service worker take effect immediately,
+        sourcemap:env.development,               // create source map for server worker in development mode
+        directoryIndex:"index.html",             // directoryIndex
+      })
     ],
     module: {                     // loaders section in module.rules
       rules: [
