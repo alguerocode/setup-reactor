@@ -38,20 +38,20 @@ module.exports = (env) => { // webpack function with env pramater and return web
   // ****************************************************************************************/
   return {
     mode: env.production ? 'production' : 'development',//Providing the mode configuration option tells webpack
-                                                        //to use its built-in optimizations accordingly. (production | development);
+    //to use its built-in optimizations accordingly. (production | development);
     entry: './src/index.jsx',                           //The entry object is where webpack looks to start building the bundle;
     output: {
       clean: true,                                                  // Clean the output directory before emit.
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
         "assets/js/[name].bundle.js",                               // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
-      publicPath: './'                                              // This option specifies the public URL of the output directory when referenced in a browser;
+      publicPath: path.resolve(__dirname, "/")                       // This option specifies the public URL of the output directory when referenced in a browser;
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
-                                                           // webpack env.production = true is set to false for optimization and minifying the files
+    // webpack env.production = true is set to false for optimization and minifying the files
     optimization: {                 // optimization section 
       minimize: env.production,     // Tell webpack to minimize the bundle using the TerserPlugin or the plugin(s) specified in minimizer
-                                    // if webpack env.production = false don't use it and use default webpack optimization 
+      // if webpack env.production = false don't use it and use default webpack optimization 
       minimizer: [                  // Allows you to override the default minimizer by providing a different one or more customized
 
         new TerserWebpackPlugin({   // tarser => use for minimize and optimize js files 
@@ -59,7 +59,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           terserOptions: {          // Terser minify options                     
             compress: {             // {***  minify option **}
               comparisons: false,
-              drop_console:true     // remove console log from files
+              drop_console: true     // remove console log from files
             },                      // ****************************************************************************************/
             mangle: {               // allows you to control whether or not to mangle class name, function name, property name,
               safari10: true        //
@@ -98,7 +98,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
     },                             //************************************************************************/
     devServer: {                   //describes the options that affect the behavior of webpack-dev-server  
       port: 5000,                  //the port of the server to run into                                    
-      contentBase: '/',            //the content base of files live                                        
+      contentBase: '/build',       //the content base of files live                                        
       watchContentBase: true,      //reload when something changed                                         
       filename: '[name].bundle.js',//name of file output                                                   
       hot: true,                   //auto realod the files on the server                                   
@@ -106,14 +106,16 @@ module.exports = (env) => { // webpack function with env pramater and return web
       historyApiFallback: true,    // the index.html page will likely have to be served in place of any 404 responses
       open: true,                  // open new window in browser when server are runing
       overlay: true,               //Shows a full-screen overlay in the browser when there are compiler errors or warnings.
-      publicPath: '/',              //The bundled files will be available in the browser under this path
-      liveReload: true              //the dev-server will reload/refresh the page when file changes are detected.
+      publicPath: "/assets/",      //The bundled files will be available in the browser under this path
+      liveReload: true             //the dev-server will reload/refresh the page when file changes are detected.
     },
     plugins: [
       new HtmlWebpackPlugin({                                      //  simplifies creation of HTML files to serve your webpack bundles                              
         template: path.resolve(__dirname, 'public', 'index.html'), // webpack relative or absolute path to the template. 
         title: "React | Basic Setup",                              // title of the page
-        inject: true,                                              // inject the script in html and use defer type approach                                // List all entries which should not be injected
+        inject: true,                                              // inject the script in html and use defer type approach 
+        scriptLoading: "defer",                                     // add scription loading defenition
+        publicPath: path.resolve(__dirname, "/")                     // add public path 
       }),                                                          // ********************************************************
       new MiniCssExtractPlugin({                                                                                      // extract css and put them in sperate files
         filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",               // file name approach
@@ -125,10 +127,10 @@ module.exports = (env) => { // webpack function with env pramater and return web
         )
       }),
       new WorkBoxPlugin.GenerateSW({            // Service workers enable advanced optimization techniques and improvements to user experience
-        swDest:"service-worker.js",             // specifies the output filename for the generated worker file.
-        mode:env.production ? "production" : "development",// => mode env for WorkboxPlugin
-        clientsClaim:true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-        skipWaiting:true                        // makes updates to the service worker take effect immediately
+        swDest: "service-worker.js",             // specifies the output filename for the generated worker file.
+        mode: env.production ? "production" : "development",// => mode env for WorkboxPlugin
+        clientsClaim: true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
+        skipWaiting: true                        // makes updates to the service worker take effect immediately
       })
     ],
     module: {                     // loaders section in module.rules
@@ -152,7 +154,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           use: [
             MiniCssExtractPlugin.loader,
             {
-              loader: "css-loader", 
+              loader: "css-loader",
               options: {
                 importLoaders: 2
               }
@@ -184,7 +186,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           use: {                                           // conifguatin the usage of babel-loader
             loader: 'babel-loader',                        // loader => babel loader
             options: {                                     // options of loader
-              
+
               cacheDirectory: true,                        // the given directory will be used to cache the results of the loader
               cacheCompression: false,                     // each Babel transform output will be compressed with Gzip.
               envName: env.production ? 'production' : 'development' // set the babel loader envirounment
