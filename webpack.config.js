@@ -163,9 +163,6 @@ module.exports = (env) => { // webpack function with env pramater and return web
         {
           test: /\.(jpe?g|png|gif)$/,        // test for image extentions
           type: 'asset',                     //use assests modules
-          generator: {                       // generator for asset
-            filename: '[name].[ext]'  // filename of images
-          }
         }
       ],
     },
