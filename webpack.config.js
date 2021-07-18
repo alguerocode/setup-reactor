@@ -194,7 +194,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
           }
         },
         {
-          test: /\.(png|jpg|gif)$/,                      // test the file with extention ending by .jpg,.png,gif
+          test:  /\.(png|svg|jpg|jpeg|gif)$/,            // test the file with extention ending by .jpg,.png,gif
           use: {                                         // image loader
             loader: "url-loader",                        // use loader => url-loader
             options: {                                   // optinos of loader
@@ -203,6 +203,10 @@ module.exports = (env) => { // webpack function with env pramater and return web
               name: "images/[name].[fullhash].[ext]",    // name of files 
             }
           }
+        },
+        {
+          test: /\.html$/,         // test for html extentions
+          loader: 'html-loader',   // html loader for load files such as  images by html imports
         },
         {
           test: /\.(eot|otf|ttf|woff|woff2)$/,            // files loader
