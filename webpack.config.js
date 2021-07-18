@@ -97,17 +97,10 @@ module.exports = (env) => { // webpack function with env pramater and return web
       runtimeChunk: "single"       // adds an additional chunk containing only the runtime to each entrypoint
     },                             //************************************************************************/
     devServer: {                   //describes the options that affect the behavior of webpack-dev-server  
-      port: 5000,                  //the port of the server to run into                                    
-      contentBase: '/build',       //the content base of files live                                        
-      watchContentBase: true,      //reload when something changed                                         
-      filename: '[name].bundle.js',//name of file output                                                   
-      hot: true,                   //auto realod the files on the server                                   
+      port: 8080,                  //the port of the server to run into                                                                                                                
       compress: true,              //Enable gzip compression for everything served                         
       historyApiFallback: true,    // the index.html page will likely have to be served in place of any 404 responses
-      open: true,                  // open new window in browser when server are runing
       overlay: true,               //Shows a full-screen overlay in the browser when there are compiler errors or warnings.
-      publicPath: "/assets/",      //The bundled files will be available in the browser under this path
-      liveReload: true             //the dev-server will reload/refresh the page when file changes are detected.
     },
     plugins: [
       new HtmlWebpackPlugin({                                      //  simplifies creation of HTML files to serve your webpack bundles                              
