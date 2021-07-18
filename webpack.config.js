@@ -45,6 +45,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
         "assets/js/[name].bundle.js",                               // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
       publicPath: "/",                                              // This option specifies the public URL of the output directory when referenced in a browser;
+      assetModuleFilename:"images/[name][ext]"                      // asset module filename
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
     // webpack env.production = true is set to false for optimization and minifying the files
@@ -161,9 +162,9 @@ module.exports = (env) => { // webpack function with env pramater and return web
         },
         {
           test: /\.(jpe?g|png|gif)$/,        // test for image extentions
-          type: 'asset/resource',            //use assests modules
+          type: 'asset',                     //use assests modules
           generator: {                       // generator for asset
-            filename: 'images/[name].[ext]'  // filename of images
+            filename: '[name].[ext]'  // filename of images
           }
         }
       ],
