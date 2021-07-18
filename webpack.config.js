@@ -4,9 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const {InjectManifest} = require('workbox-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 {/*
-  webpack configuration structure:
+  webpack configuration s tructure:
   mode, 
   entry,
   output,
@@ -126,15 +126,11 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      //todo                        
-      new InjectManifest({                               // Service workers enable advanced optimization techniques and improvements to user experience
-        swSrc:path.resolve(__dirname,"src","index.jsx"), //The path to the source service worker file that can contain your own customized code
-        swDest: "service-worker.js",                     // specifies the output filename for the generated worker file.
-        mode: env.production ? "production" : "development",// => mode env for WorkboxPlugin
-        clientsClaim: true,                              // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
-        skipWaiting: true,                               // makes updates to the service worker take effect immediately,
-        sourcemap:env.development,                       // create source map for server worker in development mode
-        directoryIndex:"index.html",                     // directoryIndex
+      new GenerateSW({                //The GenerateSW plugin will create a service worker file for you and add it to the webpack asset pipeline.
+        swDest: "service-worker.js",  //The path and filename of the service worker file that will be created by the build process.
+        clientsClaim: true,           //Whether or not the service worker should start controlling any existing clients as soon as it activates.
+        skipWaiting: true,            //Whether or not the service worker should skip over the waiting lifecycle stage. Normally this is used with clientsClaim: true.
+        sourcemap:env.development     // add server worker source map in development envirounment.
       })
     ],
     module: {                     // loaders section in module.rules
