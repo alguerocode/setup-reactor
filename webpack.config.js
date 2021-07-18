@@ -26,10 +26,9 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
     web-worker,
     babel-loader,
     css and extractCss loader,
-    postcss-loader,
     sass-loader,
-    url-loader,
-    file-loader
+    html-loader,
+    assets/resource
   }
 */}
 module.exports = (env) => { // webpack function with env pramater and return webpack config ;
@@ -45,7 +44,7 @@ module.exports = (env) => { // webpack function with env pramater and return web
       filename: env.production ? "assets/js/[name].[fullhash].js" : //This option determines the name of each output bundle;
         "assets/js/[name].bundle.js",                               // it determines depend on webpack env property;
       path: path.resolve(__dirname, 'build'),                       // tells webpack where path to output the files;
-      publicPath: "/"                                                // This option specifies the public URL of the output directory when referenced in a browser;
+      publicPath: "/",                                              // This option specifies the public URL of the output directory when referenced in a browser;
     },
     devtool: env.development && "eval-cheap-source-map",   // This option controls if and how source maps are generated if
     // webpack env.production = true is set to false for optimization and minifying the files
@@ -95,19 +94,23 @@ module.exports = (env) => { // webpack function with env pramater and return web
         }
       },
       runtimeChunk: "single"       // adds an additional chunk containing only the runtime to each entrypoint
-    },                             //************************************************************************/
-    devServer: {                   //describes the options that affect the behavior of webpack-dev-server  
-      port: 8080,                  //the port of the server to run into                                                                                                                
-      compress: true,              //Enable gzip compression for everything served                         
-      historyApiFallback: true,    // the index.html page will likely have to be served in place of any 404 responses
-      overlay: true,               //Shows a full-screen overlay in the browser when there are compiler errors or warnings.
-      stats: {
-        cached: false
-      }
+    },                             // ************************************************************************/
+    devServer: {                                   // describes the options that affect the behavior of webpack-dev-server 
+      contentBase:path.resolve(__dirname,'dist'),  // determine where files are served from browser
+      index: 'index.html',                         // The filename that is considered the index file.
+      port: 8080,                                  // the port of the server to run into                                                                                                                
+      compress: true,                              // Enable gzip compression for everything served                         
+      historyApiFallback: true,                    //  the index.html page will likely have to be served in place of any 404 responses
+      overlay: true,                               // Shows a full-screen overlay in the browser when there are compiler errors or warnings
+      watchContentBase: true,                      // watch content base
+      contentBasePublicPath:path.resolve(__dirname,'public'),  // Tell the server at what URL to serve devServer.contentBase static content.
+      inline: true,                                            // Toggle between the dev-server's two different modes
+      open:true,                                               // Tells dev-server to open the browser after server had been started. Set it to true to open your default browser.
+      progress:true, 
     },
     plugins: [
-      new HtmlWebpackPlugin({                                      //  simplifies creation of HTML files to serve your webpack bundles                              
-        template: path.resolve(__dirname, 'public/index.html'), // webpack relative or absolute path to the template.
+      new HtmlWebpackPlugin({                                      // simplifies creation of HTML files to serve your webpack bundles                              
+        template: path.resolve(__dirname, "public","index.html"),  // webpack relative or absolute path to the template.
         inject: true,                                              // inject the script in html and use defer type approach 
       }),                                                          // ********************************************************
       new MiniCssExtractPlugin({                                                                                      // extract css and put them in sperate files
@@ -128,46 +131,12 @@ module.exports = (env) => { // webpack function with env pramater and return web
         },                        //to apply multi threads operation in javascript.
         {
           test: /\.css$/,                                  //test the file with extention ending by .css
-          use: [MiniCssExtractPlugin.loader, {             // css extract loader;
+          use: [env.production ? MiniCssExtractPlugin.loader :"style-loader", {
             loader: 'css-loader',                          // css-loader and minimize the css
             options: {                                     // options
               modules: true,                               // enable css modules
-              importLoaders: 1                             // imoprt loader before css-loader
             }                                              //****************************************** */
-          }, "postcss-loader"]                             //for optimization and performancd loader;
-        },
-        {
-          test: /\.s[ac]ss$/,                              //Sass is another popular CSS processing framework
-          use: [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: "css-loader",
-              options: {
-                importLoaders: 2
-              }
-            },
-            {
-              loader: "resolve-url-loader"
-            },
-            {
-              loader: "sass-loader",
-              options: {
-                sourceMap: true
-              }
-            }
-          ]
-        },
-        {
-          test: /\.module.css$/,                              // test the file with extention ending by .css
-          use: [                                              //                              
-            MiniCssExtractPlugin.loader,                      // extract css loader
-            {                                                 //
-              loader: "css-loader",                           //
-              options: {                                      // loader options
-                modules: true                                 // enable module option to use css module in css loader
-              }
-            }
-          ]
+          }]                  
         },
         {
           test: /\.(js|jsx)?$/,                            // test the file with extention ending by .js or .jsx
@@ -194,13 +163,13 @@ module.exports = (env) => { // webpack function with env pramater and return web
           test: /\.(jpe?g|png|gif)$/,        // test for image extentions
           type: 'asset/resource',            //use assests modules
           generator: {                       // generator for asset
-            filename: 'img/[hash][ext]'      // filename of images
+            filename: 'images/[name].[ext]'  // filename of images
           }
         }
       ],
     },
-    resolve: {                    //Configure how modules are resolved.              
-      extensions: [".js", ".jsx"] //Attempt to resolve these extensions in order
+    resolve: {                     //Configure how modules are resolved.              
+      extensions: [".js", ".jsx"]  //Attempt to resolve these extensions in order
     }
   };
 };
