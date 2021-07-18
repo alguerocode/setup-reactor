@@ -114,8 +114,8 @@ module.exports = (env) => { // webpack function with env pramater and return web
         template: path.resolve(__dirname, 'public', 'index.html'), // webpack relative or absolute path to the template. 
         title: "React | Basic Setup",                              // title of the page
         inject: true,                                              // inject the script in html and use defer type approach 
-        scriptLoading: "defer",                                     // add scription loading defenition
-        publicPath: path.resolve(__dirname, "/")                     // add public path 
+        scriptLoading: "defer",                                    // add scription loading defenition
+        publicPath: path.resolve(__dirname, "/")                   // add public path 
       }),                                                          // ********************************************************
       new MiniCssExtractPlugin({                                                                                      // extract css and put them in sperate files
         filename: env.production ? "assets/css/[name].bundle.css" : "assets/css/[name].[fullhash].css",               // file name approach
@@ -126,7 +126,8 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      new WorkBoxPlugin.GenerateSW({            // Service workers enable advanced optimization techniques and improvements to user experience
+      env.production &&                          // the server worker will be userd in production
+      new WorkBoxPlugin.GenerateSW({             // Service workers enable advanced optimization techniques and improvements to user experience
         swDest: "service-worker.js",             // specifies the output filename for the generated worker file.
         mode: env.production ? "production" : "development",// => mode env for WorkboxPlugin
         clientsClaim: true,                      // instructs the service worker to take control of the page immediately after registration and begin serving cached resources
