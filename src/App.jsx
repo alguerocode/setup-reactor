@@ -1,14 +1,15 @@
 import React from 'react';
-import Counter from './components/Counter.jsx';
 
 // implementig lazy loading
 
-const Counter = React.lazy(()=>import('./components/Counter'));
+const Counter = React.lazy(() => import('./components/Counter'));
 
 const App = () => {
   return (
     <div className="app">
-      <Counter/>
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <Counter />
+      </React.Suspense>
     </div>
   );
 };
