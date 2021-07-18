@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+
 {/*
   webpack configuration s tructure:
   mode, 
@@ -123,11 +123,6 @@ module.exports = (env) => { // webpack function with env pramater and return web
           env.production ? "production" : "development"
         )
       }),
-      new WorkboxPlugin.InjectManifest({ // service worker
-        swSrc: path.resolve(__dirname,"src/service-worker.js"),
-        swDest: "service-worker.js",
-        mode:env.production ? "production" : "development"
-      })
     ],
     module: {                     // loaders section in module.rules
       rules: [
