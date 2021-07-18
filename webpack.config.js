@@ -207,6 +207,10 @@ module.exports = (env) => { // webpack function with env pramater and return web
         {
           test: /\.html$/,         // test for html extentions
           loader: 'html-loader',   // html loader for load files such as  images by html imports
+          options:{                // html loader options
+            minimize: true,        // Tell html-loader to minimize HTML
+            sources:true           // Enables/Disables sources handling
+          }
         },
         {
           test: /\.(eot|otf|ttf|woff|woff2)$/,            // files loader
