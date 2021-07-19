@@ -8,9 +8,7 @@ module.exports = merge(webpackBase, {
   mode: "development",
   output: {
     filename: "assets/js/[name].bundle.js",
-    path: path.resolve(__dirname, "public"),
-    publicPath: "/",
-    assetModuleFilename: "images/[name][ext]",
+    chunkFilename: '[name].chunk.js',
   },
   devtool: "eval-cheap-source-map",
   module: {
@@ -31,6 +29,13 @@ module.exports = merge(webpackBase, {
             envName: "development",
           },
         },
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader',
+        options: {
+          sources:true
+        }
       },
     ],
   },

@@ -14,9 +14,7 @@ module.exports = merge(webpackBase, {
   output: {
     clean: true,
     filename: "assets/js/[name].[fullhash].js",
-    path: path.resolve(__dirname, "build"),
-    publicPath: "../",
-    assetModuleFilename: "images/[name][ext]",
+    chunkFilename: '[name].[chunkhash].chunk.js',
   },
   devtool: false,
   module: {
@@ -33,6 +31,14 @@ module.exports = merge(webpackBase, {
             envName: "production",
           },
         },
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader',
+        options: {
+          minimize: true,
+          sources:true
+        }
       },
       {
         test: /\.css$/,
