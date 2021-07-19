@@ -11,10 +11,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.worker\.js$/,
-        loader: "worker-loader",
-      },
-      {
         test: /\.(jpe?g|png|gif)$/,
         type: "asset/resource",
       },

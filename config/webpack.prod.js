@@ -67,7 +67,6 @@ module.exports = merge(webpackBase, {
         },
       }),
       new CssMinimizerPlugin({
-        cache: true,
         parallel: true,
       }),
     ],
