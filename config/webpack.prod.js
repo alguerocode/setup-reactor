@@ -4,6 +4,9 @@ const { merge } = require("webpack-merge");
 const webpackBase = require("./webpack.base.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+
 
 // configuration of production webpack settings
 module.exports = merge(webpackBase, {
@@ -33,7 +36,7 @@ module.exports = merge(webpackBase, {
       },
       {
         test: /\.css$/,
-        use: [, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
   },
@@ -88,6 +91,10 @@ module.exports = merge(webpackBase, {
   plugins: [
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("production"),
+    }),
+    new MiniCssExtractPlugin({
+      filename: "assets/css/[name].[fullhash].css",
+      chunkFilename: "assets/css/[name].[contenthash:8].chunk.css",
     }),
   ],
 });
