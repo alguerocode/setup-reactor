@@ -102,5 +102,7 @@ module.exports = merge(webpackBase, {
       chunkFilename: "assets/css/[name].[contenthash:8].chunk.css",
     }),
   ],
-  performance: {}
+  performance: {
+    hints: false,
+  }
 });
