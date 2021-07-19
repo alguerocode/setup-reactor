@@ -52,4 +52,7 @@ module.exports = merge(webpackBase, {
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
   ],
+  performance: {
+    hints: false,
+  }
 });

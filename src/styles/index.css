@@ -6,7 +6,7 @@ body{
   flex-direction: column;
 }
 button{
-  background-color:blue;
+  background-color:rgb(47, 0, 255);
   color:rgb(255, 255, 255);
   border-radius: 8px;
   width: 110px;
