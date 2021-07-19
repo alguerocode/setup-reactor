@@ -2,9 +2,92 @@ const webpack = require("webpack");
 const path = require("path");
 const { merge } = require("webpack-merge");
 const webpackBase = require("./webpack.base.js");
-
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserWebpackPlugin = require("terser-webpack-plugin");
 
 // configuration of production webpack settings
-module.exports = merge(webpackBase,{
-
-})
+module.exports = merge(webpackBase, {
+  mode: "production",
+  output: {
+    clean: true,
+    filename: "assets/js/[name].[fullhash].js",
+    path: path.resolve(__dirname, "build"),
+    publicPath: "../",
+    assetModuleFilename: "images/[name][ext]",
+  },
+  devtool: false,
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            configFile: path.resolve(__dirname, "babel.config.js"),
+            cacheDirectory: true,
+            cacheCompression: true,
+            envName: "production",
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [, "css-loader"],
+      },
+    ],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserWebpackPlugin({
+        parallel: true,
+        terserOptions: {
+          compress: {
+            comparisons: false,
+            drop_console: true,
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            comments: false,
+            ascii_only: true,
+          },
+          warnings: false,
+        },
+      }),
+      new CssMinimizerPlugin({
+        cache: true,
+        parallel: true,
+      }),
+    ],
+    splitChunks: {
+      chunks: "all",
+      minSize: 0,
+      maxInitialRequests: 20,
+      maxAsyncRequests: 20,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module, chunks, cacheGroupKey) {
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1];
+            return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+          },
+        },
+        common: {
+          minChunks: 2,
+          priority: -10,
+        },
+      },
+    },
+    runtimeChunk: "single",
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("production"),
+    }),
+  ],
+});
