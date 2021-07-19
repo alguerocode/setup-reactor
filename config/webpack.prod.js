@@ -28,15 +28,13 @@ module.exports = merge(webpackBase, {
             configFile: path.resolve(__dirname, "babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
-            envName: "production",
-          },
-        },
+          }
+        }
       },
       {
         test: /\.html$/,
         loader: 'html-loader',
         options: {
-          minimize: true,
           sources:true
         }
       },

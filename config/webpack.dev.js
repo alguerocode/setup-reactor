@@ -15,10 +15,6 @@ module.exports = merge(webpackBase, {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
         test: /\.(js|jsx)?$/,
         exclude: /node_modules/,
         use: {
@@ -27,9 +23,12 @@ module.exports = merge(webpackBase, {
             configFile: path.resolve(__dirname, "babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
-            envName: "development",
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.html$/,
@@ -43,7 +42,7 @@ module.exports = merge(webpackBase, {
   devServer: {
     contentBase: path.resolve(__dirname, "dist"),
     index: "index.html",
-    port: 8080,
+    port: 5000,
     compress: true,
     historyApiFallback: true,
     overlay: true,
