@@ -142,8 +142,8 @@ module.exports = (env) => {
           exclude: /node_modules/, // exclude node_modules folder to served in babel-loader
           use: {
             loader:'babel-loader', // loader => babel loader
-            extend:path.resolve(__dirname, "config", "babel.config.js"),
             options: {
+              configFile:path.resolve(__dirname,"config","babel.config.js"),
               cacheDirectory: true, // the given directory will be used to cache the results of the loader
               cacheCompression: true, // each Babel transform output will be compressed with Gzip.
               envName: env.production ? "production" : "development", // set the babel loader envirounment
