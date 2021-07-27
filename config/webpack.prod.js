@@ -23,10 +23,9 @@ module.exports = merge(webpackBase, {
         use: {
           loader: "babel-loader",
           options: {
-            configFile: path.resolve(__dirname, "babel.config.js"),
+            configFile: path.resolve(__dirname, "..","babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
-            envName: "production",
           },
         },
       },
