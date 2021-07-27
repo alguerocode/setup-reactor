@@ -6,15 +6,13 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-
-
 // configuration of production webpack settings
 module.exports = merge(webpackBase, {
   mode: "production",
   output: {
     clean: true,
     filename: "assets/js/[name].[fullhash].js",
-    chunkFilename: '[name].[chunkhash].chunk.js',
+    chunkFilename: "[name].[chunkhash].chunk.js",
   },
   devtool: false,
   module: {
@@ -25,24 +23,56 @@ module.exports = merge(webpackBase, {
         use: {
           loader: "babel-loader",
           options: {
-            configFile: path.resolve(__dirname ,"babel.config.js"),
+            configFile: path.resolve(__dirname, "babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
-            envName:'production'
-          }
-        }
+            envName: "production",
+          },
+        },
       },
       {
         test: /\.html$/,
-        loader: 'html-loader',
+        loader: "html-loader",
         options: {
-          sources:true,
-          minimize:true
-        }
+          sources: true,
+          minimize: true,
+        },
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                config: path.resolve(__dirname, "postcss.config.js"),
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 2,
+            },
+          },
+          "resolve-url-loader",
+          {
+            loader: "sass-loader",
+          },
+        ],
       },
     ],
   },
@@ -104,5 +134,5 @@ module.exports = merge(webpackBase, {
   ],
   performance: {
     hints: false,
-  }
+  },
 });

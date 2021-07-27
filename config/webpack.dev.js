@@ -3,13 +3,12 @@ const path = require("path");
 const { merge } = require("webpack-merge");
 const webpackBase = require("./webpack.base.js");
 
-
 // configuration of development webpack settings
 module.exports = merge(webpackBase, {
   mode: "development",
   output: {
     filename: "assets/js/[name].bundle.js",
-    chunkFilename: '[name].chunk.js',
+    chunkFilename: "[name].chunk.js",
   },
   devtool: "eval-cheap-source-map",
   module: {
@@ -20,23 +19,55 @@ module.exports = merge(webpackBase, {
         use: {
           loader: "babel-loader",
           options: {
-            configFile: path.resolve(__dirname,"babel.config.js"),
+            configFile: path.resolve(__dirname, "babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
-            envName:"development"
+            envName: "development",
           },
         },
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                config: path.resolve(__dirname, "postcss.config.js"),
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.html$/,
-        loader: 'html-loader',
+        loader: "html-loader",
         options: {
-          sources:true
-        }
+          sources: true,
+        },
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 2,
+            },
+          },
+          "resolve-url-loader",
+          {
+            loader: "sass-loader",
+          },
+        ],
       },
     ],
   },
@@ -60,5 +91,5 @@ module.exports = merge(webpackBase, {
   ],
   performance: {
     hints: "warning",
-  }
+  },
 });
