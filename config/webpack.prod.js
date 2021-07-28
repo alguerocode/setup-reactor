@@ -6,6 +6,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 // configuration of production webpack settings
 
@@ -25,7 +26,7 @@ module.exports = merge(webpackBase, {
         use: {
           loader: "babel-loader",
           options: {
-            configFile: path.resolve(__dirname, "..","babel.config.js"),
+            configFile: path.resolve(__dirname, "..", "babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
           },
@@ -97,15 +98,23 @@ module.exports = merge(webpackBase, {
           warnings: false,
         },
       }),
+      new UglifyJsPlugin({
+        parallel: true,
+        uglifyOptions: {
+          output: {
+            comments: false,
+          },
+        },
+      }),
+      new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
       new CssMinimizerPlugin({
         parallel: true,
       }),
       new ImageMinimizerPlugin({
         // minify: ImageMinimizerPlugin.squooshMinify, !release will be soon
-        severityError: 'warning', // Ignore errors on corrupted images
+        severityError: "warning", // Ignore errors on corrupted images
         minimizerOptions: {
           encodeOptions: {
-            
             mozjpeg: {
               // That setting might be close to lossless, but it’s not guaranteed
               // https://github.com/GoogleChromeLabs/squoosh/issues/85
@@ -117,32 +126,32 @@ module.exports = merge(webpackBase, {
             avif: {
               // https://github.com/GoogleChromeLabs/squoosh/blob/dev/codecs/avif/enc/README.md
               cqLevel: 0,
-            }
-          }
-        }
-      })
-    ],
-    splitChunks: {
-      chunks: "all",
-      minSize: 0,
-      maxInitialRequests: 20,
-      maxAsyncRequests: 20,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module, chunks, cacheGroupKey) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+            },
           },
         },
-        common: {
-          minChunks: 2,
-          priority: -10,
-        },
-      },
-    },
+      }),
+    ],
+    // splitChunks: {
+    //   chunks: "all",
+    //   minSize: 0,
+    //   maxInitialRequests: 20,
+    //   maxAsyncRequests: 20,
+    //   cacheGroups: {
+    //     vendors: {
+    //       test: /[\\/]node_modules[\\/]/,
+    //       name(module, chunks, cacheGroupKey) {
+    //         const packageName = module.context.match(
+    //           /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+    //         )[1];
+    //         return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+    //       },
+    //     },
+    //     common: {
+    //       minChunks: 2,
+    //       priority: -10,
+    //     },
+    //   },
+    // },
     runtimeChunk: "single",
   },
   plugins: [
@@ -152,6 +161,10 @@ module.exports = merge(webpackBase, {
     new MiniCssExtractPlugin({
       filename: "assets/css/[name].[fullhash].css",
       chunkFilename: "assets/css/[name].[contenthash:8].chunk.css",
+    }),
+    new webpack.LoaderOptionsPlugin({
+      // UglifyJsPlugin no longer switches loaders into minimize mode
+      minimize: true,
     }),
   ],
   performance: {
