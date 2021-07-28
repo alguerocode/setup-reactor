@@ -5,8 +5,10 @@ const webpackBase = require("./webpack.base.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 
 // configuration of production webpack settings
+
 module.exports = merge(webpackBase, {
   mode: "production",
   output: {
@@ -98,6 +100,27 @@ module.exports = merge(webpackBase, {
       new CssMinimizerPlugin({
         parallel: true,
       }),
+      new ImageMinimizerPlugin({
+        // minify: ImageMinimizerPlugin.squooshMinify, !release will be soon
+        severityError: 'warning', // Ignore errors on corrupted images
+        minimizerOptions: {
+          encodeOptions: {
+            
+            mozjpeg: {
+              // That setting might be close to lossless, but it’s not guaranteed
+              // https://github.com/GoogleChromeLabs/squoosh/issues/85
+              quality: 100,
+            },
+            webp: {
+              lossless: 1,
+            },
+            avif: {
+              // https://github.com/GoogleChromeLabs/squoosh/blob/dev/codecs/avif/enc/README.md
+              cqLevel: 0,
+            }
+          }
+        }
+      })
     ],
     splitChunks: {
       chunks: "all",
