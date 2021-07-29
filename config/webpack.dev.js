@@ -14,12 +14,12 @@ module.exports = merge(webpackBase, {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)?$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
-            configFile: path.resolve(__dirname,"..", "babel.config.js"),
+            configFile: path.resolve(__dirname, "..", "babel.config.js"),
             cacheDirectory: true,
             cacheCompression: true,
           },

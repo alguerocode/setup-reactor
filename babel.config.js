@@ -6,7 +6,8 @@ module.exports = { // you can learn this in babel documentation
         modules: false,
       }
     ],
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   plugins: [
     "@babel/plugin-transform-runtime",
