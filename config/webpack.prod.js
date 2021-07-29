@@ -177,9 +177,7 @@ module.exports = merge(webpackBase, {
       // UglifyJsPlugin no longer switches loaders into minimize mode
       minimize: true,
     }),
-    new ForkTsCheckerWebpackPlugin({
-      configFile:path.resolve(__dirname, "..","tsconfig.json")
-    })
+    new ForkTsCheckerWebpackPlugin()
   ],
   performance: {
     hints: false,
