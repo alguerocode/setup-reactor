@@ -25,7 +25,7 @@ npm install
 delete the typescript branch from your project 
 
 ```sh 
-git brnach -D typescript
+git branch -D typescript
 ```
 run webpack server 
 ```sh
