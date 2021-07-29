@@ -2,8 +2,11 @@ const webpack = require("webpack");
 const path = require("path");
 const { merge } = require("webpack-merge");
 const webpackBase = require("./webpack.base.js");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 
 // configuration of development webpack settings
+
 module.exports = merge(webpackBase, {
   mode: "development",
   output: {
@@ -14,7 +17,7 @@ module.exports = merge(webpackBase, {
   module: {
     rules: [
       {
-        test: /\.(js|jsx|ts|tsx)$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -23,6 +26,15 @@ module.exports = merge(webpackBase, {
             cacheDirectory: true,
             cacheCompression: true,
           },
+        },
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        loader: "ts-loader",
+        exclude: /node_modules/,
+        options: {
+          // disable type checker - we will use it in fork plugin
+          transpileOnly: true,
         },
       },
       {
@@ -87,6 +99,9 @@ module.exports = merge(webpackBase, {
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
+    new ForkTsCheckerWebpackPlugin({
+      configFile:path.resolve(__dirname, "..","tsconfig.json"),	
+    })
   ],
   performance: {
     hints: "warning",
