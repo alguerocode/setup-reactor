@@ -14,35 +14,27 @@
 > with webpack and babel and postCss to optimizing css and transform it to older code
 > using webpack 5 , babel,postCss 
 
-## how to setup reactor 
+## how to setup reactor typescript
 setup in your computer
 
 ```sh
 git clone https://github.com/alhashmicode/setup-reactor.git
 
+git checkout typescript
+
 npm install 
 ```
-delete the typescript branch from your project 
+
+delete the main branch from your project 
 
 ```sh 
-git brnach -D typescript
+git brnach -D main
 ```
 run webpack server 
 ```sh
 npm run start
 ```
 
-## setup reactor with typescript (typescript is deprecated)
-if you want to typescript in you reactor setup project go to typescritp branch [typescript](https://github.com/alhashmicode/setup-reactor/tree/typescript)
-## Usage
-for run development server 
-```sh
-npm run start
-```
-for build and optimizing project
-```sh
-npm run build
-```
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome.<br />
