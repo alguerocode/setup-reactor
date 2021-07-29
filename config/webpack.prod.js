@@ -13,7 +13,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // configuration of production webpack settings
 
 module.exports = merge(webpackBase, {
-  context:path.resolve(__dirname,".."),
   mode: "production",
   output: {
     clean: true,
