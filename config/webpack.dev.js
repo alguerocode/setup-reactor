@@ -17,7 +17,7 @@ module.exports = merge(webpackBase, {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|tsx|ts)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -26,15 +26,6 @@ module.exports = merge(webpackBase, {
             cacheDirectory: true,
             cacheCompression: true,
           },
-        },
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        loader: "ts-loader",
-        exclude: /node_modules/,
-        options: {
-          // disable type checker - we will use it in fork plugin
-          transpileOnly: true,
         },
       },
       {
@@ -99,7 +90,9 @@ module.exports = merge(webpackBase, {
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
-    new ForkTsCheckerWebpackPlugin()
+    new ForkTsCheckerWebpackPlugin({
+      async: false
+    })
   ],
   performance: {
     hints: "warning",

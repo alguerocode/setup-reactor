@@ -23,7 +23,7 @@ module.exports = merge(webpackBase, {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -32,15 +32,6 @@ module.exports = merge(webpackBase, {
             cacheDirectory: true,
             cacheCompression: true,
           },
-        },
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        loader: "ts-loader",
-        exclude: /node_modules/,
-        options: {
-          // disable type checker - we will use it in fork plugin
-          transpileOnly: true,
         },
       },
       {
@@ -177,7 +168,9 @@ module.exports = merge(webpackBase, {
       // UglifyJsPlugin no longer switches loaders into minimize mode
       minimize: true,
     }),
-    new ForkTsCheckerWebpackPlugin()
+    new ForkTsCheckerWebpackPlugin({
+      async: false
+    })
   ],
   performance: {
     hints: false,

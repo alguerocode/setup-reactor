@@ -2,7 +2,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  context:path.resolve(__dirname,".."),
   entry: path.resolve(__dirname, "..", "src", "index.tsx"),
   output: {
     path: path.resolve(__dirname, "..", "build"),
@@ -33,7 +32,7 @@ module.exports = {
   },
   resolve: {
     modules: ["node_modules", "src"],
-    extensions: [".js", ".jsx", "tsx", ".ts", ".react.js"],
+    extensions: [".js", ".jsx", ".tsx", ".ts", ".react.js"],
     mainFields: ["browser", "jsnext:main", "main"],
   },
   plugins: [
