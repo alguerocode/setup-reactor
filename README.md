@@ -32,7 +32,7 @@ run webpack server
 npm run start
 ```
 
-## setup reactor with typescript (typescript is deprecated)
+## setup reactor with typescript
 if you want to typescript in you reactor setup project go to typescritp branch [typescript](https://github.com/alhashmicode/setup-reactor/tree/typescript)
 ## Usage
 for run development server 
