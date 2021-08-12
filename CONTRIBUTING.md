@@ -1,4 +1,4 @@
-# Contributing to Readme Markdown Generator
+# Contributing to reactor-setup
 
 👍🎉 First off, thanks for taking the time to contribute! 🎉👍
 
